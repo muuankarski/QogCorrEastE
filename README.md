@@ -8,7 +8,7 @@ This repository has the source code for running similar application as this on y
 ## Steps to follow
 
 1. start a new project based on version control in RStudio
-2. copy-paste the url of this repository and give name of your liking
+2. copy-paste the url <`https://github.com/muuankarski/QogCorrEastE`> of this repository and give the project name of your liking
 3. create a data folder and run `create_data.R` script (requites RCurl-package)
 4. `library(shiny)`
 5. `runApp()`
