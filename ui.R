@@ -38,7 +38,7 @@ shinyUI(fluidPage(theme = "bootstrap_spacelab.css",
                                          Creative Commons Attribution 4.0 International License</a>.")), 
                            h5("Source code"),
                            helpText(HTML("<ul>
-                                         <li>Available at <a href=\"https://github.com/muuankarski/QogCorr\"><strong>GitHub</strong></a></li>
+                                         <li>Available at <a href=\"https://github.com/muuankarski/QogCorrEastE\"><strong>GitHub</strong></a></li>
                                          </ul>"))
                     ),
                     column(4, offset = 1,

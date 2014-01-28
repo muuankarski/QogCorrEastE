@@ -10,5 +10,9 @@ This repository has the source code for running similar application as this on y
 1. start a new project based on version control in RStudio
 2. copy-paste the url <`https://github.com/muuankarski/QogCorrEastE`> of this repository and give the project name of your liking
 3. create a data folder and run `create_data.R` script (requites RCurl-package)
-4. `library(shiny)`
-5. `runApp()`
+3. Install the latest deveplopment version of shiny
+`if (!require("devtools"))
+  install.packages("devtools")
+devtools::install_github("shiny", "rstudio")`
+4. load shiny `library(shiny)`
+5. fire the app `runApp()`
