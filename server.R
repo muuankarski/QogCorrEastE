@@ -214,16 +214,100 @@ shinyServer(function(input, output) {
 
    })
   
-#   output$data <- renderPrint({ Tää oli datan plottaamiseen time-skatteriin että tiesi missä vika
-#     datPlotT <- datasetInputT()
-#     datPlotT
-#     
-#   })
-  
+ 
   output$timeplot <- reactivePlot(function() {
     print(plotInputT())
   })
+
+  plotInputL <- reactive(function() {
+      cbPalette <- c("#000000", "#D55E00", "#56B4E9",  "#CC79A7", "#0072B2", "#F0E442")
+      datPlotT <- datasetInputT()
+      
+      if (input$log_scale == TRUE) scale <- scale_y_log10()
+      if (input$log_scale == FALSE) scale <- scale_y_continuous()
+      
+      ggplot(datPlotT, aes(x=year, y=varx, 
+                           group=cntry,color=cntry,
+                           label=year)) +
+          geom_point(alpha=.5) + 
+          geom_path(alpha=.5)  +
+          geom_text(size=5, hjust=0.0, vjust=-0.5,alpha=.7) +
+          geom_text(data=merge(datPlotT, aggregate(year ~ cntry, datPlotT, max),
+                               by=c("year","cntry")),
+                    aes(x=year,y=varx,label=cntry),
+                    hjust=1,vjust=-1,size=5) + 
+          labs(x = "year",
+               y = input$variableX) + 
+          theme_minimal() +
+          scale_colour_manual(values=cbPalette) +
+          theme(legend.title=element_blank()) +
+          theme(legend.text=element_text(size=16)) +
+          theme(legend.position="top") +
+          theme(axis.title = element_text(size=16)) +
+          theme(axis.text = element_text(size=16)) +
+          scale
+               
+  })
   
+  output$lineplot <- reactivePlot(function() {
+      print(plotInputL())
+  })
+  
+  
+  plotInputR <- reactive(function() {
+      cbPalette <- c("#000000", "#D55E00", "#56B4E9",  "#CC79A7", "#0072B2", "#F0E442")
+      datPlotT <- datasetInputT()
+      relDat <-  merge(datPlotT, aggregate(year ~ cntry, datPlotT, min),
+                by=c("year","cntry"))
+      relDat <- relDat[,c("year","cntry","varx")]
+      names(relDat)[3] <- "baseline"
+      dat_cntry1 <- datPlotT[datPlotT$cntry == input$Country1,]
+      dat_cntry2 <- datPlotT[datPlotT$cntry == input$Country2,]
+      dat_cntry3 <- datPlotT[datPlotT$cntry == input$Country3,]
+      dat_cntry4 <- datPlotT[datPlotT$cntry == input$Country4,]
+      dat_cntry5 <- datPlotT[datPlotT$cntry == input$Country5,]
+
+      dat_cntry1_rl <- relDat[relDat$cntry == input$Country1,]
+      dat_cntry2_rl <- relDat[relDat$cntry == input$Country2,]
+      dat_cntry3_rl <- relDat[relDat$cntry == input$Country3,]
+      dat_cntry4_rl <- relDat[relDat$cntry == input$Country4,]
+      dat_cntry5_rl <- relDat[relDat$cntry == input$Country5,]
+
+      dat_cntry1$rela <- dat_cntry1$varx / dat_cntry1_rl$baseline
+      dat_cntry2$rela <- dat_cntry2$varx / dat_cntry2_rl$baseline
+      dat_cntry3$rela <- dat_cntry3$varx / dat_cntry3_rl$baseline
+      dat_cntry4$rela <- dat_cntry4$varx / dat_cntry4_rl$baseline
+      dat_cntry5$rela <- dat_cntry5$varx / dat_cntry5_rl$baseline
+      
+      datPlotR <- rbind(dat_cntry1,dat_cntry2,
+                        dat_cntry3,dat_cntry4,
+                        dat_cntry5)
+      
+      ggplot(datPlotR, aes(x=year, y=rela, 
+                           group=cntry,color=cntry,
+                           label=year)) +
+          geom_point(alpha=.5) + 
+          geom_path(alpha=.5)  +
+          geom_text(size=5, hjust=0.0, vjust=-0.5,alpha=.7) +
+          geom_text(data=merge(datPlotR, aggregate(year ~ cntry, datPlotR, max),
+                               by=c("year","cntry")),
+                    aes(x=year,y=rela,label=cntry),
+                    hjust=1,vjust=-1,size=5) + 
+          labs(x = "year",
+               y = input$variableX) + 
+          theme_minimal() +
+          scale_colour_manual(values=cbPalette) +
+          theme(legend.title=element_blank()) +
+          theme(legend.text=element_text(size=16)) +
+          theme(legend.position="top") +
+          theme(axis.title = element_text(size=16)) +
+          theme(axis.text = element_text(size=16))
+            
+  })
+  
+  output$relaplot <- reactivePlot(function() {
+      print(plotInputR())
+  })
   #******************************#
   #*** Downloads scatter
   
